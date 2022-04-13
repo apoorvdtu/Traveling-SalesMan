@@ -1,0 +1,27 @@
+body{
+    margin: 0px;
+    box-sizing: content-box;
+}
+.nav-bar{
+    position: fixed;
+    display: flex;
+    border: 5px solid blanchedalmond;
+    padding: 4px;
+    background-color: rgb(213, 213, 213);
+    z-index: 1000;
+}
+.nav-bar *{
+    /* margin: 10px; */
+    /* background-color: aqua; */
+    font-size: x-large;
+    margin-left: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.nav-bar *:hover{
+background-color: blueviolet;
+}
+#map
+{
+    height: 100vh;
+}
