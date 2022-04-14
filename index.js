@@ -214,16 +214,7 @@
     polyarr.push(polyline);
   }
 
-  function waitForSomeTime() {
-    count = 0;
-    let cid = setInterval(function () {
-      if (count == 5) {
-        alert('hi' + count);
-        clearInterval(cid);
-      }
-      count++;
-    }, 10000);
-  }
+ 
   function addPolyLineToGraph() {
     for (let i = 0; i < polyarr.length; i++) {
       polyarr[i].removeFrom(map);
