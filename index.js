@@ -5,7 +5,7 @@
   let backtracking = document.querySelector('.backtracking');
   let dynamicAlgorithm = document.querySelector('.dynamic-programming');
   let algo = "back";
-  dynamicAlgorithm.addEventListener('click',function(){
+  dynamicAlgorithm.addEventListener('click', function () {
     algo = "dp";
   })
   let pathspeed = 5;
@@ -87,7 +87,7 @@
 
 
     }
-    else{
+    else {
       dp_1();
     }
 
@@ -350,46 +350,50 @@
     this.x = (round ? Math.round(x) : x);
     this.y = (round ? Math.round(y) : y);
   }
-
   function dp_1() {
 
+    let INT_MAX = 999999;
 
-    let graph = fill2dGraph();
-    let n = graph.length;
+    let dist = fill2dGraph();
+    let n = dist.length;
     let VISITED_ALL = (1 << n) - 1;
-    let dplen = graph.length;
-    let dp = [[]];
-    for (let i = 0; i < 10000; i++) {
+
+    let dp = [];
+    for (let i = 0; i < (1 << n); i++) {
+      // dp[i].fill(0,0,n);
       dp[i] = [];
-      for (let j = 0; j < 10000; j++) {
-        dp[i].push(0);
+      for (let j = 0; j < n; j++) {
+        dp[i].push(-1);
       }
     }
-    let parent = [];
-    for (let i = 0; i < 10000; i++) {
+    var parent = [];
+    // vector<vector<int> > parent(4,vector<int>(16,-1));
+    for (let i = 0; i < n; i++) {
       parent[i] = [];
-      for (let j = 0; j < 10000; j++) {
+
+      for (let j = 0; j < (1<<n); j++) {
         parent[i].push(-1);
       }
     }
+
     function tsp(mask, pos) {
 
       if (mask == VISITED_ALL) {
-        return graph[pos][0];
+        return dist[pos][0];
       }
       if (dp[mask][pos] != -1) {
         return dp[mask][pos];
       }
 
 
-      ans = Infinity;
+      var ans = INT_MAX;
 
 
-      for (let city = 0; city < n; city++) {
+      for (var city = 0; city < n; city++) {
 
         if ((mask & (1 << city)) == 0) {
 
-          let newAns = graph[pos][city] + tsp(mask | (1 << city), city);
+          var newAns = dist[pos][city] + tsp(mask | (1 << city), city);
           if (newAns < ans) {
             parent[pos][mask] = city;
             ans = newAns;
@@ -401,43 +405,37 @@
       return dp[mask][pos] = ans;
     }
 
-    /* init the dp array */
-    for (let i = 0; i < (1 << n); i++) {
-      for (let j = 0; j < n; j++) {
-        dp[i][j] = -1;
+    function main() {
+      /* init the dp array */
+
+      console.log(tsp(1, 0));
+
+      for (var i = 0; i < n; i++) {
+        for (var j = 0; j < n; j++) {
+          console.log(parent[i][j]);
+        }
       }
-    }
-    let cost = tsp(1, 0);
-    console.log("Travelling Saleman graphance is " + cost);
-    for (let i = 0; i < n; i++) {
-      let sub = "";
-      for (let j = 0; j < n; j++) {
-        sub = sub + parent[i][j] + " ";
+      var path = [];
+      path.fill(-1, 0, n);
+      var path_counter = 0;
+      var cur_node = 0;
+      var cur_mask = 1;
+
+      do {
+        path[path_counter] = cur_node;
+        path_counter += 1;
+        cur_node = parent[cur_node][cur_mask];
+        cur_mask = cur_mask | (1 << cur_node);
+      } while (cur_node != -1);
+
+      for (var i = 0; i < n; i++) {
+        console.log(path[i]);
       }
-      //     cout << endl;
-      console.log(sub);
-    }
-    var path = [];
-    for (let i = 0; i < n; i++) {
-      path.push(0);
-    }
-    let path_counter = 0;
-    let cur_node = 0;
-    let cur_mask = 1;
 
-    do {
-      path[path_counter] = cur_node;
-      path_counter += 1;
-      cur_node = parent[cur_node][cur_mask];
-      cur_mask = cur_mask | (1 << cur_node);
-    } while (cur_node != -1);
-    var ans = [];
-    for (let i = 0; i < n; i++) {
-      ans.push(path[i]);
+      // cout<<endl;
+      // return 0;
     }
-
-    console.log(ans);
-
+    main();
   }
 
 })();
