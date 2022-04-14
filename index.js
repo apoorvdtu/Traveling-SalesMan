@@ -1,4 +1,7 @@
 (function () {
+  let run = document.querySelector('.run');
+  let restart = document.querySelector('.restart');
+
   var map = L.map('map').setView([20.5937, 78.9629], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -7,8 +10,6 @@
   var polyarr = [];
   var latlngs = [];
   var polyarrow = [];
-  let run = document.querySelector('.run');
-  let restart = document.querySelector('.restart');
   map.addEventListener('click', addMarkerToMap);
   run.addEventListener('click', startActivity);
 
@@ -46,7 +47,7 @@
   function startActivity() {
     var graph = fill2dGraph();
     var visited = [];
-    
+
     for (let i = 0; i < graph.length; i++) {
       visited.push(false);
     }
