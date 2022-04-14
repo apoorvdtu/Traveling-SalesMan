@@ -26,11 +26,10 @@
       return;
     }
     val = val.trim();
-    if(val.length==0)
-    {
+    if (val.length == 0) {
       return;
     }
-    pathspeed =parseInt(val);
+    pathspeed = parseInt(val);
   }
   restart.addEventListener('click', function () {
     for (let i = 0; i < polyarr.length; i++) {
@@ -120,12 +119,12 @@
       c++;
 
 
-    }, pathspeed*1000);
+    }, pathspeed * 1000);
     setTimeout(function () {
       minCostPath(ans);
       overlay.style.display = "none";
       run.setAttribute('pressed', 'false');
-    }, ans.length * pathspeed*1000 + pathspeed*1000);
+    }, ans.length * pathspeed * 1000 + pathspeed * 1000);
 
 
   }
