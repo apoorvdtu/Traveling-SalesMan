@@ -46,6 +46,13 @@
   // marker.addTo(map);
 
   function startActivity() {
+    console.log(run.getAttribute('pressed'))
+    if (run.getAttribute('pressed') == 'true') {
+      return;
+    }
+    run.setAttribute('pressed', 'true');
+    console.log(run.getAttribute('pressed'))
+
     overlay.style.display = "block";
 
     var graph = fill2dGraph();
@@ -62,9 +69,6 @@
 
 
     printAllPath(ans);
-
-    graph = [];
-    ans = [];
 
 
   }
@@ -104,6 +108,7 @@
     setTimeout(function () {
       minCostPath(ans);
       overlay.style.display = "none";
+      run.setAttribute('pressed','false');
     }, ans.length * 5000 + 5000)
 
 
