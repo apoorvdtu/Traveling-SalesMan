@@ -56,12 +56,13 @@
     if (run.getAttribute('pressed') == 'true') {
       return;
     }
+    run.setAttribute('pressed', 'true');
+
 
     if (algo === "back") {
       let time1 = Date.now();
       console.time('Time to execute BackTracking');
 
-      run.setAttribute('pressed', 'true');
       console.log(run.getAttribute('pressed'))
 
       overlay.style.display = "block";
@@ -402,7 +403,7 @@
     }
 
     function main() {
-
+      let time1 = Date.now();
       console.log(tsp(1, 0));
 
 
@@ -424,17 +425,28 @@
       }
       minpsf.push(0);
       console.log(minpsf);
-      var dpans = [];
-      for (let i = 0; i < minpsf.length; i++) {
-        let markernum = parseInt(minpsf[i]);
-        dpans.push(latlngs[markernum]);
-      }
-      latlngs = [];
-      latlngs = dpans.filter(() => {
-        return true;
-      });
-      dpans = [];
-      addPolyLineToGraph();
+      let time2 = Date.now();
+      overlay.style.display = "block";
+      let time = time2 - time1;
+      tempAlert(' Time Taken for Calculating Best Possible Path: ' + time + " ms ", 13000);
+
+      setTimeout(function () {
+        var dpans = [];
+        for (let i = 0; i < minpsf.length; i++) {
+          let markernum = parseInt(minpsf[i]);
+          dpans.push(latlngs[markernum]);
+        }
+        latlngs = [];
+        latlngs = dpans.filter(() => {
+          return true;
+        });
+        dpans = [];
+        addPolyLineToGraph();
+        run.setAttribute('pressed', 'false');
+        overlay.style.display = "none";
+      }, 10000);
+
+
 
     }
     main();

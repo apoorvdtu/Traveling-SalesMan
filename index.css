@@ -12,6 +12,7 @@ body{
     padding: 4px;
     background-color: rgb(255, 238, 109);
     z-index: 1000;
+    
     width: max-content;
 }
 .nav-bar *{
