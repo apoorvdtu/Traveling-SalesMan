@@ -63,23 +63,24 @@
     }
     count = 0;
     printAllPaths();
+
     // let cid = setInterval(function () {
     //   if (count == 5) {
     //     clearInterval(cid);
     //   }
     //   count++;
     // }, 1000)
-    // var path = [];
-    // for (let i = 0; i < minpsf.length; i++) {
-    //   let markernum = parseInt(minpsf[i]);
-    //   path.push(latlngs[markernum]);
-    // }
-    // latlngs = [];
-    // latlngs = path.filter(() => {
-    //   return true;
-    // });
-    // path = [];
-    // addPolyLineToGraph();
+    var path = [];
+    for (let i = 0; i < minpsf.length; i++) {
+      let markernum = parseInt(minpsf[i]);
+      path.push(latlngs[markernum]);
+    }
+    latlngs = [];
+    latlngs = path.filter(() => {
+      return true;
+    });
+    path = [];
+    addPolyLineToGraph();
     console.log(minCost + "," + minpsf);
     graph = [];
     ans = [];
@@ -154,22 +155,23 @@
       let cost = ans[i].cost;
       let psf = ans[i].psf;
       var path = [];
-      for (let i = 0; i < psf.length; i++) {
-        let markernum = parseInt(psf[i]);
-        path.push(latlngs[markernum]);
-      }
-      latlngs = [];
-      latlngs = path.filter(() => {
-        return true;
-      });
-      addPolyLineToGraph();
-      count = 0;
-      let cid = setInterval(function () {
-        if (count == 5) {
-          clearInterval(cid);
-        }
-        count++;
-      }, 1000);
+      console.log(psf);
+      // for (let i = 0; i < psf.length; i++) {
+      //   let markernum = parseInt(psf[i]);
+      //   path.push(latlngs[markernum]);
+      // }
+      // latlngs = [];
+      // latlngs = path.filter(() => {
+      //   return true;
+      // });
+      // addPolyLineToGraph();
+      // count = 0;
+      // let cid = setInterval(function () {
+      //   if (count == 5) {
+      //     clearInterval(cid);
+      //   }
+      //   count++;
+      // }, 1000);
 
     }
 
