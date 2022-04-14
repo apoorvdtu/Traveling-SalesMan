@@ -13,8 +13,8 @@
   run.addEventListener('click', startActivity);
 
   const icon = L.icon({
-    iconUrl: 'backpack.jpg',
-    iconSize: [80, 60]
+    iconUrl: 'rocket.png',
+    iconSize: [45, 45]
   });
 
   restart.addEventListener('click', function () {
@@ -183,9 +183,9 @@
     }
     polyarr = [];
     polyarrow = [];
-    var polyline = L.polyline(latlngs, { color: 'red' });
+    var polyline = L.polyline(latlngs, { color: 'orange' });
     polyline.addTo(map);
-    let parrow = L.featureGroup(getArrows(latlngs, 'black', 2, map));
+    let parrow = L.featureGroup(getArrows(latlngs, 'purple', 4, map));
     parrow.addTo(map)
     polyarrow.push(parrow);
     polyarr.push(polyline);
