@@ -75,7 +75,7 @@
     console.timeEnd('Time to execute BackTracking');
     console.log(time2 - time1);
     let time = time2 - time1;
-    tempAlert(' Timing for Calculating Best Possible Path: ' + time + " ms ", 10000);
+    tempAlert(' Time Taken for Calculating Best Possible Path: ' + time + " ms ", 10000);
     printAllPath(ans);
 
 
