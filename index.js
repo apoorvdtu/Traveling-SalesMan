@@ -4,28 +4,37 @@
   let overlay = document.querySelector('#overlay');
   let backtracking = document.querySelector('.backtracking');
   let dynamicAlgorithm = document.querySelector('.dynamic-programming');
+  var ans = [];
+  var polyarr = [];
+  var latlngs = [];
+  var polyarrow = [];
   let algo = "back";
-  dynamicAlgorithm.addEventListener('click', function () {
-    algo = "dp";
-  })
   let pathspeed = 5;
   let speed = document.querySelector('.speed');
   var map = L.map('map').setView([20.5937, 78.9629], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
-  var ans = [];
-  var polyarr = [];
-  var latlngs = [];
-  var polyarrow = [];
-  map.addEventListener('click', addMarkerToMap);
-  run.addEventListener('click', startActivity);
-  speed.addEventListener('click', handlepathspeed);
-
   const icon = L.icon({
     iconUrl: 'rocket.png',
     iconSize: [45, 45]
   });
+  dynamicAlgorithm.addEventListener('click', function () {
+    algo = "dp";
+  });
+
+  backtracking.addEventListener('click', function () {
+    algo = "back";
+  });
+  restart.addEventListener('click', function () {
+    document.location.reload(true)
+  });
+
+  map.addEventListener('click', addMarkerToMap);
+  run.addEventListener('click', startActivity);
+  speed.addEventListener('click', handlepathspeed);
+
+
   function handlepathspeed() {
     let val = prompt('Enter Speed(Secs) At Which Probable Paths should be shown');
     if (val == null) {
@@ -40,16 +49,6 @@
     }
     pathspeed = parseInt(val);
   }
-  restart.addEventListener('click', function () {
-    document.location.reload(true)
-  });
-
-
-  // const marker = L.marker([15.5937, 78.9629], {
-  //   icon
-  // })
-  // // marker.bindPopup('<h4>Travler</h4>')
-  // marker.addTo(map);
 
   function startActivity() {
     console.log(run.getAttribute('pressed'))
@@ -102,7 +101,6 @@
     }, duration);
     document.body.appendChild(el);
   }
-
   function printAllPath(ans) {
     let c = 0;
     overlay.style.display = "block";
@@ -227,8 +225,6 @@
     })
     addPolyLineToGraph();
   }
-
-
   function addPolyLineToGraph() {
     for (let i = 0; i < polyarr.length; i++) {
       polyarr[i].removeFrom(map);
@@ -245,7 +241,6 @@
     polyarrow.push(parrow);
     polyarr.push(polyline);
   }
-
   function fill2dGraph() {
     var graph = [];
     for (let i = 0; i < latlngs.length; i++) {
@@ -305,14 +300,12 @@
     }
     return result;
   }
-
   function getAngle(latLng1, latlng2, coef) {
     var dy = latlng2[0] - latLng1[0];
     var dx = Math.cos(Math.PI / 180 * latLng1[0]) * (latlng2[1] - latLng1[1]);
     var ang = ((Math.atan2(dy, dx) / Math.PI) * 180 * coef);
     return (ang).toFixed(2);
   }
-
   function myMidPoint(latlng1, latlng2, per, mapObj) {
     if (!mapObj)
       throw new Error('map is not defined');
@@ -337,14 +330,12 @@
     }
 
   }
-
   function distanceTo(p1, p2) {
     var x = p2.x - p1.x,
       y = p2.y - p1.y;
 
     return Math.sqrt(x * x + y * y);
   }
-
   function Point(x, y, round) {
     this.x = (round ? Math.round(x) : x);
     this.y = (round ? Math.round(y) : y);
