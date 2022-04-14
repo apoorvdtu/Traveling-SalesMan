@@ -197,22 +197,6 @@
     })
     addPolyLineToGraph();
   }
-  function tempPath(latLngs) {
-    for (let i = 0; i < polyarr.length; i++) {
-      polyarr[i].removeFrom(map);
-    }
-    for (let i = 0; i < polyarrow.length; i++) {
-      polyarrow[i].removeFrom(map);
-    }
-    polyarr = [];
-    polyarrow = [];
-    var polyline = L.polyline(latlngs, { color: 'red' });
-    polyline.addTo(map);
-    let parrow = L.featureGroup(getArrows(latlngs, 'black', 2, map));
-    parrow.addTo(map)
-    polyarrow.push(parrow);
-    polyarr.push(polyline);
-  }
 
  
   function addPolyLineToGraph() {
@@ -335,7 +319,6 @@
     this.x = (round ? Math.round(x) : x);
     this.y = (round ? Math.round(y) : y);
   }
-
 
   function dp() {
     function heldKarp(cities, start) {
