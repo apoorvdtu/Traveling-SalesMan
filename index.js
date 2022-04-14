@@ -3,11 +3,20 @@
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
+  var ans = [];
   var polyarr = [];
   var latlngs = [];
   var polyarrow = [];
   let run = document.querySelector('.run');
   let restart = document.querySelector('.restart');
+  map.addEventListener('click', addMarkerToMap);
+  run.addEventListener('click', startActivity);
+
+  const icon = L.icon({
+    iconUrl: 'backpack.jpg',
+    iconSize: [80, 60]
+  });
+
   restart.addEventListener('click', function () {
     for (let i = 0; i < polyarr.length; i++) {
       polyarr[i].removeFrom(map);
@@ -24,33 +33,37 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-    
-  })
-  const icon = L.icon({
-    iconUrl: 'backpack.jpg',
-    iconSize: [80, 60]
+
   });
+
 
   // const marker = L.marker([15.5937, 78.9629], {
   //   icon
   // })
   // // marker.bindPopup('<h4>Travler</h4>')
   // marker.addTo(map);
-  map.addEventListener('click', addMarkerToMap);
 
-
-  run.addEventListener('click', startActivity);
   function startActivity() {
     var graph = fill2dGraph();
     var visited = [];
+    
     for (let i = 0; i < graph.length; i++) {
-
       visited.push(false);
     }
+
     let count = tsp(0, graph, 1, visited, "0", 0, 0);
     console.log(ans);
 
     console.log(count);
+    minCostPath(ans);
+
+    graph = [];
+    ans = [];
+
+    console.log("--------------");
+
+  }
+  function minCostPath(ans) {
     let minCost = Infinity;
     let minpsf = "";
     for (let i = 0; i < ans.length; i++) {
@@ -62,14 +75,6 @@
       }
     }
     count = 0;
-    printAllPaths();
-
-    // let cid = setInterval(function () {
-    //   if (count == 5) {
-    //     clearInterval(cid);
-    //   }
-    //   count++;
-    // }, 1000)
     var path = [];
     for (let i = 0; i < minpsf.length; i++) {
       let markernum = parseInt(minpsf[i]);
@@ -82,15 +87,8 @@
     path = [];
     addPolyLineToGraph();
     console.log(minCost + "," + minpsf);
-    graph = [];
-    ans = [];
-
-    console.log("--------------");
-    // tsp_dp(graph);
 
   }
-
-  var ans = [];
   function tsp(i, graph, csf, visited, psf, cost, msrc) {
     if (csf == graph.length) {
       psf = psf + " " + msrc;
@@ -149,34 +147,33 @@
     })
     addPolyLineToGraph();
   }
-
-  function printAllPaths() {
-    for (let i = 0; i < ans.length; i++) {
-      let cost = ans[i].cost;
-      let psf = ans[i].psf;
-      var path = [];
-      console.log(psf);
-      // for (let i = 0; i < psf.length; i++) {
-      //   let markernum = parseInt(psf[i]);
-      //   path.push(latlngs[markernum]);
-      // }
-      // latlngs = [];
-      // latlngs = path.filter(() => {
-      //   return true;
-      // });
-      // addPolyLineToGraph();
-      // count = 0;
-      // let cid = setInterval(function () {
-      //   if (count == 5) {
-      //     clearInterval(cid);
-      //   }
-      //   count++;
-      // }, 1000);
-
+  function tempPath(latLngs) {
+    for (let i = 0; i < polyarr.length; i++) {
+      polyarr[i].removeFrom(map);
     }
-
+    for (let i = 0; i < polyarrow.length; i++) {
+      polyarrow[i].removeFrom(map);
+    }
+    polyarr = [];
+    polyarrow = [];
+    var polyline = L.polyline(latlngs, { color: 'red' });
+    polyline.addTo(map);
+    let parrow = L.featureGroup(getArrows(latlngs, 'black', 2, map));
+    parrow.addTo(map)
+    polyarrow.push(parrow);
+    polyarr.push(polyline);
   }
 
+  function waitForSomeTime() {
+    count = 0;
+    let cid = setInterval(function () {
+      if (count == 5) {
+        alert('hi' + count);
+        clearInterval(cid);
+      }
+      count++;
+    }, 10000);
+  }
   function addPolyLineToGraph() {
     for (let i = 0; i < polyarr.length; i++) {
       polyarr[i].removeFrom(map);
@@ -188,11 +185,12 @@
     polyarrow = [];
     var polyline = L.polyline(latlngs, { color: 'red' });
     polyline.addTo(map);
-    let polyarrows = L.featureGroup(getArrows(latlngs, 'black', 2, map));
-    polyarrows.addTo(map)
-    polyarrow.push(polyarrows);
+    let parrow = L.featureGroup(getArrows(latlngs, 'black', 2, map));
+    parrow.addTo(map)
+    polyarrow.push(parrow);
     polyarr.push(polyline);
   }
+
   function fill2dGraph() {
     var graph = [];
     for (let i = 0; i < latlngs.length; i++) {
@@ -290,22 +288,6 @@
       y = p2.y - p1.y;
 
     return Math.sqrt(x * x + y * y);
-  }
-
-  function toPoint(x, y, round) {
-    if (x instanceof Point) {
-      return x;
-    }
-    if (isArray(x)) {
-      return new Point(x[0], x[1]);
-    }
-    if (x === undefined || x === null) {
-      return x;
-    }
-    if (typeof x === 'object' && 'x' in x && 'y' in x) {
-      return new Point(x.x, x.y);
-    }
-    return new Point(x, y, round);
   }
 
   function Point(x, y, round) {
