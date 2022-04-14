@@ -3,6 +3,7 @@
   let restart = document.querySelector('.restart');
   let overlay = document.querySelector('#overlay');
   let pathspeed = 5;
+  let timetaken = 0;
   let speed = document.querySelector('.speed');
   var map = L.map('map').setView([20.5937, 78.9629], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -64,6 +65,8 @@
     if (run.getAttribute('pressed') == 'true') {
       return;
     }
+    let time1 = Date.now();
+    console.time('Time to execute BackTracking');
 
     run.setAttribute('pressed', 'true');
     console.log(run.getAttribute('pressed'))
@@ -71,21 +74,34 @@
     overlay.style.display = "block";
 
     var graph = fill2dGraph();
+
     var visited = [];
 
     for (let i = 0; i < graph.length; i++) {
       visited.push(false);
     }
-
     let count = tsp(0, graph, 1, visited, "0", 0, 0);
     console.log(ans);
 
     console.log(count);
 
-
+    let time2 = Date.now();
+    console.timeEnd('Time to execute BackTracking');
+    console.log(time2 - time1);
+    let time = time2 - time1;
+    tempAlert(' Timing for Calculating Best Possible Path: ' + time + " ms ", 10000);
     printAllPath(ans);
 
 
+  }
+  function tempAlert(msg, duration) {
+    var el = document.createElement("div");
+    el.setAttribute("style", "position:absolute;top:94%;left:2%;font-size:x-large;font-family: 'Times New Roman', Times, serif;font-weight: 200;color: teal;z-index:1560;background-color: rgb(255, 238, 109);border: 3px solid rgb(113, 227, 0);border-radius: 5px;");
+    el.innerHTML = msg;
+    setTimeout(function () {
+      el.parentNode.removeChild(el);
+    }, duration);
+    document.body.appendChild(el);
   }
 
   function printAllPath(ans) {
