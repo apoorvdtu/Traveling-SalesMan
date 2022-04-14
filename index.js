@@ -3,7 +3,7 @@
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
-
+  var polyarr = [];
   var latlngs = [];
 
   let run = document.querySelector('.run');
@@ -36,7 +36,7 @@
     graph = [];
     ans = [];
     console.log("--------------");
-    tsp_dp(graph);
+    // tsp_dp(graph);
 
   }
   var ans = [];
@@ -69,23 +69,28 @@
     marker.addTo(map);
 
     latlngs.push([e.latlng.lat, e.latlng.lng]);
+    
+    marker.addEventListener('click', function () {
+      map.removeLayer(marker);
+
+     let latidx =  latlngs.findIndex((latlng)=>{
+        return  latlng[0] == e.latlng.lat && latlng[1] == e.latlng.lng
+      })
+      latlngs.splice(latidx,1);
+      for(let i = 0;i<polyarr.length;i++)
+      {
+          polyarr[i].removeFrom(map);
+      }
+      polyarr =[];
+      addPolyLineToGraph();
+    })
+    addPolyLineToGraph();
+  }
+  function addPolyLineToGraph()
+  {
     var polyline = L.polyline(latlngs, { color: 'red' });
     polyline.addTo(map);
-    // marker.addEventListener('click', function () {
-    //   map.removeLayer(marker);
-
-    //   for (let i = 0; i < latlngs.length; i++) {
-    //     let latlng = latlngs[i];
-    //     if (latlng[0] == e.latlng.lat && latlng[1] == e.latlng.lng) {
-    //       latlngs.splice(i, 1);
-    //       console.log(latlngs);
-
-    //       break;
-    //     }
-    //   }
-    // map.removeLayer(polyline);
-    // })
-
+    polyarr.push(polyline);
   }
   function fill2dGraph() {
     var graph = [];
