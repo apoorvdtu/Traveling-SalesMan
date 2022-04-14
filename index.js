@@ -2,8 +2,13 @@
   let run = document.querySelector('.run');
   let restart = document.querySelector('.restart');
   let overlay = document.querySelector('#overlay');
+  let backtracking = document.querySelector('.backtracking');
+  let dynamicAlgorithm = document.querySelector('.dynamic-programming');
+  let algo = "back";
+  dynamicAlgorithm.addEventListener('click',function(){
+    algo = "dp";
+  })
   let pathspeed = 5;
-  let timetaken = 0;
   let speed = document.querySelector('.speed');
   var map = L.map('map').setView([20.5937, 78.9629], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -51,32 +56,41 @@
     if (run.getAttribute('pressed') == 'true') {
       return;
     }
-    let time1 = Date.now();
-    console.time('Time to execute BackTracking');
 
-    run.setAttribute('pressed', 'true');
-    console.log(run.getAttribute('pressed'))
+    if (algo === "back") {
+      let time1 = Date.now();
+      console.time('Time to execute BackTracking');
 
-    overlay.style.display = "block";
+      run.setAttribute('pressed', 'true');
+      console.log(run.getAttribute('pressed'))
 
-    var graph = fill2dGraph();
+      overlay.style.display = "block";
 
-    var visited = [];
+      var graph = fill2dGraph();
 
-    for (let i = 0; i < graph.length; i++) {
-      visited.push(false);
+      var visited = [];
+
+      for (let i = 0; i < graph.length; i++) {
+        visited.push(false);
+      }
+      let count = tsp(0, graph, 1, visited, "0", 0, 0);
+      console.log(ans);
+
+      console.log(count);
+
+      let time2 = Date.now();
+      console.timeEnd('Time to execute BackTracking');
+      console.log(time2 - time1);
+      let time = time2 - time1;
+      tempAlert(' Time Taken for Calculating Best Possible Path: ' + time + " ms ", 10000);
+      printAllPath(ans);
+
+
     }
-    let count = tsp(0, graph, 1, visited, "0", 0, 0);
-    console.log(ans);
+    else{
+      dp_1();
+    }
 
-    console.log(count);
-
-    let time2 = Date.now();
-    console.timeEnd('Time to execute BackTracking');
-    console.log(time2 - time1);
-    let time = time2 - time1;
-    tempAlert(' Time Taken for Calculating Best Possible Path: ' + time + " ms ", 10000);
-    printAllPath(ans);
 
 
   }
@@ -337,216 +351,93 @@
     this.y = (round ? Math.round(y) : y);
   }
 
-  function dp() {
-    function heldKarp(cities, start) {
-      var toHold = [];
-      if (cities.length == 2) {
-        return Math.max(...cities[0]);
-      }
-      else {
-        for (var i = 0; i < cities.length; i++) {
-          if (cities[start][i] == 0) {
-            continue;
-          }
-          else {
-            var tempMatrix = copyGraph(cities);
-            reduceGraph(tempMatrix, start);
-            toHold.push(cities[start][i] + heldKarp(tempMatrix, (i < 1 ? 0 : i - 1)));
-          }
-        }
-        return Math.min(...toHold);
+  function dp_1() {
+
+
+    let graph = fill2dGraph();
+    let n = graph.length;
+    let VISITED_ALL = (1 << n) - 1;
+    let dplen = graph.length;
+    let dp = [[]];
+    for (let i = 0; i < 10000; i++) {
+      dp[i] = [];
+      for (let j = 0; j < 10000; j++) {
+        dp[i].push(0);
       }
     }
-
-    function heldKarpAlt(cities, start) {
-      if (cities.length < 2) {
-        return 0;
+    let parent = [];
+    for (let i = 0; i < 10000; i++) {
+      parent[i] = [];
+      for (let j = 0; j < 10000; j++) {
+        parent[i].push(-1);
       }
-      // memoTable will be the way we hold distances that have already
-      // been computed. For every index, there are three elements: in order,
-      // the subset of cities already visited, the city we are going through
-      // to reach that subset, and the minimum distance produced from that
-
-      // this is some initial setup
-      var memoTable = [];
-      var validCities = [];
-      for (var i = 0; i < cities.length; i++) {
-        if (start == i) {
-          continue;
-        }
-        validCities.push(i);
-      }
-      var subsets = generateSubsets(validCities);
-      for (var i = 0; i < validCities.length; i++) {
-        memoTable.push([[], validCities[i], 0]);
-      }
-
-      // this constructs the memo table with possible sets and cities
-      for (var i = 1; i < validCities.length; i++) {
-        var temp = [];
-        var subsetsCopy = subsets.filter(set => set.length == i);
-        for (var j = 0; j < subsetsCopy.length; j++) {
-          for (var k = 0; k < validCities.length; k++) {
-            if (subsetsCopy[j].includes(validCities[k])) {
-              continue;
-            }
-            temp.push([subsetsCopy[j], validCities[k], -1]);
-          }
-        }
-        for (var x = 0; x < temp.length; x++) {
-          memoTable.push(temp[x]);
-        }
-      }
-      memoTable.push([validCities, start, -1]);
-
-      var minDist = [];
-      var tempStuff = [];
-      var accumulator = 0;
-
-      for (var i = 0; i < memoTable.length; i++) {
-        var currentLength = memoTable[i][0].length;
-        if (memoTable[i][0] == 0) {
-          continue;
-        }
-        var tempStuff = memoTable.filter(set => set[0].length == currentLength - 1);
-        for (var k = 0; k < memoTable[i][0].length; k++) {
-          var copyMemoLocation = [];
-          copyMemoLocation.push(memoTable[i][0].slice());
-          var oldCity = memoTable[i][0][k];
-          var currentCity = memoTable[i][1];
-          var lookupSet = copyMemoLocation.slice();
-          lookupSet[0].splice(k, 1);
-          for (var m = 0; m < tempStuff.length; m++) {
-            var comparisonSet = tempStuff[m][0].slice();
-            if (testEqualArrays(comparisonSet, lookupSet[0]) &&
-              (tempStuff[m][1] == oldCity)) {
-              accumulator = accumulator + tempStuff[m][2];
-            }
-          }
-          minDist.push(accumulator + findRouteDist(cities, [currentCity, oldCity]));
-          accumulator = 0;
-        }
-        memoTable[i][2] = Math.min(...minDist);
-        minDist = [];
-      }
-      var x = memoTable.pop();
-      var trueMin = x[2];
-      return trueMin;
     }
+    function tsp(mask, pos) {
 
-    // generates an undirected graph - an adjacency matrix
-
-
-    // removes a city from a graph, so an nxn graph becomes n-1 x n-1
-    function reduceGraph(matrix, start) {
-      if (start < 0) {
-        return matrix;
+      if (mask == VISITED_ALL) {
+        return graph[pos][0];
       }
-      else {
-        for (var i = 0; i < matrix.length; i++) {
-          if (i == start) {
-            continue;
-          }
-          else {
-            matrix[i].splice((start), 1);
+      if (dp[mask][pos] != -1) {
+        return dp[mask][pos];
+      }
+
+
+      ans = Infinity;
+
+
+      for (let city = 0; city < n; city++) {
+
+        if ((mask & (1 << city)) == 0) {
+
+          let newAns = graph[pos][city] + tsp(mask | (1 << city), city);
+          if (newAns < ans) {
+            parent[pos][mask] = city;
+            ans = newAns;
           }
         }
 
-        matrix.splice((start), 1);
-        return matrix;
       }
+
+      return dp[mask][pos] = ans;
     }
 
-    // prints an adjacency matrix for ease of display, borrowed from labs
-    function printMatrix(matrix) {
-      for (var i = 0; i < matrix.length; i++) {
-        console.log(matrix[i]);
-      }
-      return;
-    }
-
-    // function to make a "deep copy" of a graph
-    // this is here because both slice() and concat()
-    // both did not play nice with the algorithm
-    // thanks for nothing, stack overflow
-    function copyGraph(matrix) {
-      var why = [];
-      for (var i = 0; i < matrix.length; i++) {
-        why[i] = [matrix.length]
-        for (var j = 0; j < matrix.length; j++) {
-          why[i][j] = matrix[i][j];
-        }
-      }
-      return why;
-    }
-
-    // a function that generates all possible subsets of an array
-    // and then sorts them in order of the length of the set
-    function generateSubsets(array) {
-      var collect = [];
-      for (var i = 0; i < (Math.pow(2, array.length)); i++) {
-        var temp = [];
-        for (var j = 0; j < array.length; j++) {
-          if ((i & (1 << j))) temp.push(array[j]);
-        }
-        collect.push(temp);
-      }
-      collect.sort(function (a, b) { return a.length - b.length });
-      return collect;
-    }
-
-    // a function that takes a graph and returns a random route
-    function generateRoute(cities) {
-      var temp = [];
-      while (temp.length < cities.length) {
-        var rando = Math.floor(Math.random() * cities.length);
-        if (temp.includes(rando)) {
-          continue;
-        }
-        else {
-          temp.push(rando);
-        }
-      }
-      return temp;
-    }
-
-    // quick function to find the distance of a route
-    function findRouteDist(cities, route) {
-      var distance = 0;
-      for (var i = 0; i < route.length - 1; i++) {
-        distance = distance + cities[route[i]][route[i + 1]];
-      }
-      return distance;
-    }
-
-    // function to reverse a chunk of a given route
-    function twoOptSwap(route, i, k) {
-      if (i == k) { return route; }
-      var temp = route.slice(i, k + 1);
-      route.splice(i, (k + 1 - i));
-      for (var j = 0; j < temp.length; j++) {
-        route.splice(i, 0, temp[j]);
+    /* init the dp array */
+    for (let i = 0; i < (1 << n); i++) {
+      for (let j = 0; j < n; j++) {
+        dp[i][j] = -1;
       }
     }
-
-    // function to test if two arrays are equivalent, borrowed from labs
-    function testEqualArrays(route1, route2) {
-      var bool = true;
-      for (var i = 0; i < route1.length; i++) {
-        if (route1[i] != route2[i]) {
-          bool = false;
-        }
+    let cost = tsp(1, 0);
+    console.log("Travelling Saleman graphance is " + cost);
+    for (let i = 0; i < n; i++) {
+      let sub = "";
+      for (let j = 0; j < n; j++) {
+        sub = sub + parent[i][j] + " ";
       }
-      return bool;
+      //     cout << endl;
+      console.log(sub);
+    }
+    var path = [];
+    for (let i = 0; i < n; i++) {
+      path.push(0);
+    }
+    let path_counter = 0;
+    let cur_node = 0;
+    let cur_mask = 1;
+
+    do {
+      path[path_counter] = cur_node;
+      path_counter += 1;
+      cur_node = parent[cur_node][cur_mask];
+      cur_mask = cur_mask | (1 << cur_node);
+    } while (cur_node != -1);
+    var ans = [];
+    for (let i = 0; i < n; i++) {
+      ans.push(path[i]);
     }
 
+    console.log(ans);
 
-    console.log("-----------------------Testing Held-Karp!--------------------------");
-    var myMatrix = fill2dGraph();
-    console.time('Time to execute Held Karp')
-    console.log("On a graph of size", myMatrix.length, "the shortest path I could find is of length",
-      heldKarpAlt(myMatrix, 0));
-    console.timeEnd('Time to execute Held Karp');
-    console.log();
   }
+
 })();
