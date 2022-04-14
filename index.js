@@ -108,7 +108,7 @@
     setTimeout(function () {
       minCostPath(ans);
       overlay.style.display = "none";
-      run.setAttribute('pressed','false');
+      run.setAttribute('pressed', 'false');
     }, ans.length * 5000 + 5000)
 
 
