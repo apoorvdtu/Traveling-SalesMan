@@ -367,7 +367,7 @@
     for (let i = 0; i < n; i++) {
       parent[i] = [];
 
-      for (let j = 0; j < (1<<n); j++) {
+      for (let j = 0; j < (1 << n); j++) {
         parent[i].push(-1);
       }
     }
@@ -405,7 +405,7 @@
 
       console.log(tsp(1, 0));
 
-      
+
       var path = [];
       path.fill(-1, 0, n);
       var path_counter = 0;
@@ -418,12 +418,23 @@
         cur_node = parent[cur_node][cur_mask];
         cur_mask = cur_mask | (1 << cur_node);
       } while (cur_node != -1);
-      var anspath = [];
+      var minpsf = [];
       for (var i = 0; i < n; i++) {
-        anspath.push(path[i]);
+        minpsf.push(path[i]);
       }
-      anspath.push(0);
-      console.log(anspath);
+      minpsf.push(0);
+      console.log(minpsf);
+      var dpans = [];
+      for (let i = 0; i < minpsf.length; i++) {
+        let markernum = parseInt(minpsf[i]);
+        dpans.push(latlngs[markernum]);
+      }
+      latlngs = [];
+      latlngs = dpans.filter(() => {
+        return true;
+      });
+      dpans = [];
+      addPolyLineToGraph();
 
     }
     main();
