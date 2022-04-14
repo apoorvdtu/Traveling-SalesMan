@@ -91,8 +91,6 @@
       dp_1();
     }
 
-
-
   }
   function tempAlert(msg, duration) {
     var el = document.createElement("div");
@@ -360,14 +358,12 @@
 
     let dp = [];
     for (let i = 0; i < (1 << n); i++) {
-      // dp[i].fill(0,0,n);
       dp[i] = [];
       for (let j = 0; j < n; j++) {
         dp[i].push(-1);
       }
     }
     var parent = [];
-    // vector<vector<int> > parent(4,vector<int>(16,-1));
     for (let i = 0; i < n; i++) {
       parent[i] = [];
 
@@ -406,15 +402,10 @@
     }
 
     function main() {
-      /* init the dp array */
 
       console.log(tsp(1, 0));
 
-      for (var i = 0; i < n; i++) {
-        for (var j = 0; j < n; j++) {
-          console.log(parent[i][j]);
-        }
-      }
+      
       var path = [];
       path.fill(-1, 0, n);
       var path_counter = 0;
@@ -427,13 +418,13 @@
         cur_node = parent[cur_node][cur_mask];
         cur_mask = cur_mask | (1 << cur_node);
       } while (cur_node != -1);
-
+      var anspath = [];
       for (var i = 0; i < n; i++) {
-        console.log(path[i]);
+        anspath.push(path[i]);
       }
+      anspath.push(0);
+      console.log(anspath);
 
-      // cout<<endl;
-      // return 0;
     }
     main();
   }
