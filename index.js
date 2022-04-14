@@ -30,27 +30,13 @@
     if (val.length == 0) {
       return;
     }
+    if (run.getAttribute('pressed') == 'true') {
+      return;
+    }
     pathspeed = parseInt(val);
   }
   restart.addEventListener('click', function () {
-    for (let i = 0; i < polyarr.length; i++) {
-      polyarr[i].removeFrom(map);
-    }
-    for (let i = 0; i < polyarrow.length; i++) {
-      polyarrow[i].removeFrom(map);
-    }
-    polyarr = [];
-    polyarrow = [];
-    latlngs = [];
-    map.eachLayer(function (layer) {
-      map.removeLayer(layer);
-      overlay.style.display = 'none';
-    });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
+    document.location.reload(true)
   });
 
 
