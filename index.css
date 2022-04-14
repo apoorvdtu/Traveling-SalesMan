@@ -3,23 +3,32 @@ body{
     box-sizing: content-box;
 }
 .nav-bar{
+    margin-left: 30%;
+    justify-content: center;
     position: fixed;
     display: flex;
-    border: 5px solid blanchedalmond;
+    border: 3px solid rgb(113, 227, 0);
+    border-radius: 5px;
     padding: 4px;
-    background-color: rgb(213, 213, 213);
+    background-color: rgb(255, 238, 109);
     z-index: 1000;
+    width: max-content;
 }
 .nav-bar *{
-    /* margin: 10px; */
-    /* background-color: aqua; */
+   
     font-size: x-large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 200;
     margin-left: 5px;
     margin-right: 10px;
+    color: teal;
+
     cursor: pointer;
+    
 }
 .nav-bar *:hover{
-background-color: blueviolet;
+    text-decoration: underline;
+    transform: scale(1.1);
 }
 #map
 {
