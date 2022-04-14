@@ -2,6 +2,7 @@
   let run = document.querySelector('.run');
   let restart = document.querySelector('.restart');
   let overlay = document.querySelector('#overlay');
+  let pathspeed = 5;
   let speed = document.querySelector('.speed');
   var map = L.map('map').setView([20.5937, 78.9629], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -13,12 +14,24 @@
   var polyarrow = [];
   map.addEventListener('click', addMarkerToMap);
   run.addEventListener('click', startActivity);
+  speed.addEventListener('click', handlepathspeed);
 
   const icon = L.icon({
     iconUrl: 'rocket.png',
     iconSize: [45, 45]
   });
-
+  function handlepathspeed() {
+    let val = prompt('Enter Speed(Secs) At Which Probable Paths should be shown');
+    if (val == null) {
+      return;
+    }
+    val = val.trim();
+    if(val.length==0)
+    {
+      return;
+    }
+    pathspeed =parseInt(val);
+  }
   restart.addEventListener('click', function () {
     for (let i = 0; i < polyarr.length; i++) {
       polyarr[i].removeFrom(map);
@@ -31,7 +44,9 @@
     latlngs = [];
     map.eachLayer(function (layer) {
       map.removeLayer(layer);
+      overlay.style.display = 'none';
     });
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -50,6 +65,7 @@
     if (run.getAttribute('pressed') == 'true') {
       return;
     }
+
     run.setAttribute('pressed', 'true');
     console.log(run.getAttribute('pressed'))
 
@@ -104,12 +120,12 @@
       c++;
 
 
-    }, 5000);
+    }, pathspeed*1000);
     setTimeout(function () {
       minCostPath(ans);
       overlay.style.display = "none";
       run.setAttribute('pressed', 'false');
-    }, ans.length * 5000 + 5000)
+    }, ans.length * pathspeed*1000 + pathspeed*1000);
 
 
   }
@@ -198,7 +214,7 @@
     addPolyLineToGraph();
   }
 
- 
+
   function addPolyLineToGraph() {
     for (let i = 0; i < polyarr.length; i++) {
       polyarr[i].removeFrom(map);
