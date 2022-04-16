@@ -147,7 +147,7 @@
     for (let i = 0; i < ans.length; i++) {
       let cost = ans[i].cost;
       let psf = ans[i].psf;
-      if (minCost > cost) {
+      if (minCost >= cost) {
         minCost = cost;
         minpsf = psf;
       }
