@@ -7,7 +7,7 @@ body{
     justify-content: center;
    
     position: fixed;
-    transform: translate(70%,1%);
+    transform: translate(50%,0%);
     display: flex;
     border: 3px solid rgb(113, 227, 0);
     border-radius: 5px;
