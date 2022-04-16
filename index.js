@@ -84,7 +84,7 @@
       let time = time2 - time1;
       tempAlert(' Time Taken for Calculating Best Possible Path: ' + time + " ms ", 10000);
       printAllPath(ans);
-
+      
 
     }
     else {
@@ -112,6 +112,7 @@
       let psf = obj.psf;
       var path = [];
       console.log(psf);
+      console.log(latlngs);
       for (let i = 0; i < psf.length; i++) {
         let markernum = parseInt(psf[i]);
         path.push(latlngs[markernum]);
@@ -122,11 +123,13 @@
       latlngs = path.map(function (p) {
         return p;
       })
+      console.log(latlngs);
 
       addPolyLineToGraph();
       latlngs = olatlngs.map(function (latlng) {
         return latlng;
       })
+      console.log(latlngs);
 
 
       c++;
@@ -147,7 +150,7 @@
     for (let i = 0; i < ans.length; i++) {
       let cost = ans[i].cost;
       let psf = ans[i].psf;
-      if (minCost >= cost) {
+      if (minCost > cost) {
         minCost = cost;
         minpsf = psf;
       }
@@ -158,30 +161,22 @@
       let markernum = parseInt(minpsf[i]);
       path.push(latlngs[markernum]);
     }
+    console.log(latlngs);
     latlngs = [];
     latlngs = path.filter(() => {
       return true;
     });
     path = [];
+    console.log(latlngs);
     addPolyLineToGraph();
     console.log(minCost + "," + minpsf);
 
   }
+
   function tsp(i, graph, csf, visited, psf, cost, msrc) {
     if (csf == graph.length) {
       psf = psf + " " + msrc;
       psf = psf.trim().split(" ");
-
-      var path = [];
-      for (let i = 0; i < psf.length; i++) {
-        let markernum = parseInt(psf[i]);
-        path.push(latlngs[markernum]);
-      }
-      latlngs = path.filter(() => {
-        return true;
-      });
-      path = [];
-      addPolyLineToGraph();
       ans.push({
         psf: psf,
         cost: cost + graph[i][msrc]
