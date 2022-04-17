@@ -1,6 +1,6 @@
 # Traveling-SalesMan
 
-http://apoorvambavat.me/Traveling-SalesMan/
+https://apoorvambavat.me/Traveling-SalesMan/
 
 
 Traveling SalesMan Visualizer 
